@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mi página GitHub • Tu Nombre</title>
+  <meta name="description" content="Plantilla simple para publicar en GitHub Pages. Muestra perfil, bio y repos recientes." />
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#94a3b8;
+      --accent:#06b6d4;
+      --glass: rgba(255,255,255,0.03);
+      --radius:16px;
+      --maxw:980px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#071022 0%, #071629 60%);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:40px 20px;
+      display:flex;
+      justify-content:center;
+    }
+    .container{
+      width:100%;
+      max-width:var(--maxw);
+    }
+    header{
+      display:flex;
+      gap:20px;
+      align-items:center;
+      margin-bottom:28px;
+    }
+    .avatar{
+      width:96px;
+      height:96px;
+      border-radius:14px;
+      background:var(--glass);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      flex:0 0 96px;
+      box-shadow:0 6px 18px rgba(2,6,23,0.6);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .avatar img{width:100%;height:100%;object-fit:cover}
+    .profile-info h1{margin:0;font-size:20px}
+    .profile-info p{margin:6px 0 0;color:var(--muted)}
+    .actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+    .btn{
+      border:0;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#7dd3fc20);
+      color:rgba(3,7,18,0.98);font-weight:600;cursor:pointer;text-decoration:none;
+      box-shadow:0 6px 16px rgba(6,182,212,0.08);
+      transition:transform .12s ease;
+    }
+    .btn:hover{transform:translateY(-2px)}
+    main{display:grid;grid-template-columns:1fr;gap:18px}
+    .bio-card, .repos, .contact{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--radius);
+      padding:18px;
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow:0 10px 30px rgba(2,6,23,0.6);
+    }
+    .bio-card p{color:var(--muted);margin:0}
+    .repos-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+      gap:12px;margin-top:12px;
+    }
+    .repo{
+      background:rgba(255,255,255,0.02);
+      padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);
+      min-height:110px;display:flex;flex-direction:column;gap:8px;
+    }
+    .repo h3{margin:0;font-size:15px}
+    .repo p{margin:0;color:var(--muted);font-size:13px;flex:1}
+    .meta{display:flex;gap:10px;color:var(--muted);font-size:13px;align-items:center}
+    footer{margin-top:20px;text-align:center;color:var(--muted);font-size:13px}
+    @media(min-width:880px){
+      main{grid-template-columns: 2fr 1fr; align-items:start;}
+      header{gap:28px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main">
+    <header>
+      <div class="avatar" aria-hidden="true">
+        <!-- Reemplaza el src por la URL de tu avatar -->
+        <img src="https://avatars.githubusercontent.com/u/9919?s=200&v=4" alt="Avatar" />
+      </div>
+      <div class="profile-info">
+        <h1>Tu Nombre <small style="color:var(--muted);font-weight:400">• Desarrollador/a</small></h1>
+        <p>Desarrollador web • Data enthusiast • Proyecto: Llamayu (ejemplo)</p>
+        <div class="actions">
+          <!-- Cambia "tu-usuario" por tu usuario real de GitHub -->
+          <a class="btn" id="openGit" href="https://github.com/tu-usuario" target="_blank" rel="noopener">Ver en GitHub</a>
+          <a class="btn" id="followBtn" href="https://github.com/tu-usuario?tab=followers" target="_blank" rel="noopener">Seguidores</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="bio-card" aria-label="Sobre mí">
+        <h2>Sobre mí</h2>
+        <p>Soy un/a desarrollador/a interesado/a en crear soluciones para productores locales y comercio directo. Aquí muestro algunos repositorios recientes.</p>
+        <div style="margin-top:12px">
+          <strong>Habilidades:</strong>
+          <ul style="margin:8px 0 0 16px;color:var(--muted)">
+            <li>HTML • CSS • JavaScript</li>
+            <li>PHP • MySQL • R • Shiny</li>
+            <li>Despliegue en GitHub Pages</li>
+          </ul>
+        </div>
+      </section>
+
+      <aside class="contact" aria-label="Contacto">
+        <h3>Contacto</h3>
+        <p style="color:var(--muted);margin-top:6px">Email: <a href="mailto:tu@email.com">tu@email.com</a></p>
+        <p style="color:var(--muted);margin-top:6px">Ubicación: Perú</p>
+        <p style="color:var(--muted);margin-top:6px">Más: <a href="https://github.com/tu-usuario" target="_blank" rel="noopener">github.com/tu-usuario</a></p>
+      </aside>
+
+      <section class="repos" aria-label="Repositorios">
+        <h2>Repositorios recientes</h2>
+        <div id="repos" class="repos-grid">
+          <!-- Repositorios se insertan aquí -->
+          <div style="grid-column:1/-1;color:var(--muted)" id="loading">Cargando repositorios...</div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Plantilla simple para GitHub Pages • Cambia el nombre de usuario en el script para mostrar tus repos.
+    </footer>
+  </div>
+
+  <script>
+    // -----------------------
+    // INSTRUCCIONES:
+    // 1) Sustituye "tu-usuario" por tu usuario real de GitHub abajo.
+    // 2) Guarda este archivo como index.html y súbelo a tu repo de GitHub.
+    // 3) (Opcional) Personaliza estilos, avatar y textos.
+    // -----------------------
+
+    const username = 'tu-usuario'; // <- Cambia aquí
+    const reposContainer = document.getElementById('repos');
+    const loading = document.getElementById('loading');
+
+    async function fetchRepos(user) {
+      try {
+        const res = await fetch(`https://api.github.com/users/${encodeURIComponent(user)}/repos?sort=updated&per_page=8`);
+        if (!res.ok) throw new Error('No se pudo obtener repositorios (revisa el usuario)');
+        const repos = await res.json();
+        if (!Array.isArray(repos) || repos.length === 0) {
+          reposContainer.innerHTML = '<div style="color:var(--muted)">No se encontraron repos públicos.</div>';
+          return;
+        }
+        renderRepos(repos);
+      } catch (err) {
+        reposContainer.innerHTML = `<div style="color:#ffb4b4">Error: ${err.message}</div>`;
+        console.error(err);
+      }
+    }
+
+    function renderRepos(repos) {
+      loading?.remove
+    }
