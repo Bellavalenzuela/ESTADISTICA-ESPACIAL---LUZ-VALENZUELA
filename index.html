@@ -35,7 +35,6 @@
       overflow-x:hidden;
     }
     
-    /* Fondo animado */
     .background-animation{
       position:fixed;
       top:0;
@@ -87,7 +86,6 @@
       66% { transform: translate(-20px, 20px) scale(0.9); }
     }
     
-    /* Contenedor principal */
     .container{
       position:relative;
       z-index:1;
@@ -96,7 +94,6 @@
       padding:40px 20px;
     }
     
-    /* Hero Section - Carátula */
     .hero{
       background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
       border-radius:24px;
@@ -180,7 +177,6 @@
       color:var(--text);
     }
     
-    /* Sección de contenido */
     .content-grid{
       display:grid;
       grid-template-columns:1fr;
@@ -242,7 +238,6 @@
       font-weight:500;
     }
     
-    /* Trabajos */
     .trabajo-card{
       background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
       border-radius:16px;
@@ -334,6 +329,76 @@
       text-decoration:none;
     }
     
+    /* FORMULARIO AGREGAR TRABAJOS */
+    .form-agregar{
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+      border:2px dashed rgba(168, 85, 247, 0.5);
+      border-radius:16px;
+      padding:24px;
+      margin-bottom:24px;
+    }
+    
+    .form-agregar h3{
+      color:var(--cyan-light);
+      font-size:18px;
+      font-weight:600;
+      margin-bottom:16px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    
+    .input-field{
+      width:100%;
+      padding:14px 16px;
+      margin-bottom:12px;
+      border-radius:10px;
+      border:1px solid rgba(168, 85, 247, 0.3);
+      background:rgba(255,255,255,0.05);
+      color:var(--text);
+      font-family:'Poppins', sans-serif;
+      font-size:14px;
+      transition:all 0.3s ease;
+    }
+    
+    .input-field::placeholder{
+      color:var(--text-muted);
+    }
+    
+    .input-field:focus{
+      outline:none;
+      border-color:var(--cyan);
+      background:rgba(255,255,255,0.08);
+      box-shadow:0 0 0 3px rgba(6, 182, 212, 0.2);
+    }
+    
+    textarea.input-field{
+      resize:vertical;
+      min-height:80px;
+    }
+    
+    .btn-agregar{
+      width:100%;
+      border:none;
+      cursor:pointer;
+    }
+    
+    .btn-eliminar{
+      background:rgba(239, 68, 68, 0.2);
+      color:#f87171;
+      border:1px solid rgba(239, 68, 68, 0.4);
+      padding:6px 12px;
+      border-radius:6px;
+      cursor:pointer;
+      font-size:12px;
+      transition:all 0.2s;
+    }
+    
+    .btn-eliminar:hover{
+      background:rgba(239, 68, 68, 0.3);
+      border-color:#ef4444;
+    }
+    
     footer{
       text-align:center;
       padding:30px 20px;
@@ -350,6 +415,28 @@
         padding:40px 24px;
       }
     }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes slideOut {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+    }
   </style>
 </head>
 <body>
@@ -360,10 +447,9 @@
   </div>
 
   <div class="container">
-    <!-- Hero/Carátula -->
     <section class="hero">
       <div class="hero-content">
-        <div class="hero-badge"> PORTAFOLIO ACADÉMICO</div>
+        <div class="hero-badge">📊 PORTAFOLIO ACADÉMICO</div>
         <h1>Luz Bella Valenzuela Narvaez</h1>
         
         <div class="hero-grid">
@@ -384,39 +470,62 @@
           
           <div class="info-item">
             <div class="info-label">🏛️ Universidad</div>
-            <div class="info-value">Universidad Nacional del Altiplano</div>
+            <div class="info-value">UNA</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Contenido Principal -->
     <div class="content-grid">
       <div>
         <div class="card">
           <h2>💫 Sobre el Curso</h2>
           <p>
-            La estadística espacial es la rama de la estadística que analiza datos georreferenciados considerando su ubicación, 
-            distribución y relaciones en el espacio, para identificar patrones, asociaciones o tendencias.
+            La estadística espacial es la rama de la estadística que analiza datos 
+            georreferenciados considerando su ubicación, distribución y relaciones en el 
+            espacio, para identificar patrones, asociaciones o tendencias.
           </p>
-          
-          
-        
         </div>
 
         <div class="card" style="margin-top:24px">
-          <h2>Trabajos Académicos</h2>
+          <h2>📋 Trabajos Académicos</h2>
           
-          <div class="trabajo-card">
-            <h3>Trabajo 1</h3>
-            <p>Reducción de Rango en Covarianzas Espaciales - Análisis estadístico aplicado a grandes conjuntos de datos geoespaciales</p>
-            <a href="ReduccionRangoCovarianzasEspaciales-LUZ%20BELLA%20VALENZUELA%20NARVAEZ.pdf" class="btn" target="_blank">
-              📄 Ver Documento
-            </a>
+          <!-- FORMULARIO PARA AGREGAR TRABAJOS -->
+          <div class="form-agregar">
+            <h3>➕ Agregar Nuevo Trabajo</h3>
+            <input 
+              type="text" 
+              id="input-titulo" 
+              class="input-field"
+              placeholder="📝 Título del trabajo (ej: Trabajo 2, Tarea 1, etc.)"
+            >
+            <textarea 
+              id="input-descripcion" 
+              class="input-field"
+              placeholder="📄 Descripción breve del trabajo..."
+            ></textarea>
+            <input 
+              type="text" 
+              id="input-url" 
+              class="input-field"
+              placeholder="🔗 Nombre del archivo o URL (ej: trabajo2.pdf)"
+            >
+            <button id="btn-agregar-trabajo" class="btn btn-agregar">
+              ➕ Agregar Trabajo
+            </button>
           </div>
 
-          <div style="padding:20px;text-align:center;color:var(--text-muted);background:rgba(255,255,255,0.02);border-radius:12px">
-            ⏳ Más trabajos próximamente...
+          <!-- CONTENEDOR DE TRABAJOS -->
+          <div id="lista-trabajos">
+            <div class="trabajo-card">
+              <div style="display:flex;justify-content:space-between;align-items:start">
+                <h3>📊 Trabajo 1</h3>
+              </div>
+              <p>Reducción de Rango en Covarianzas Espaciales - Análisis estadístico aplicado a grandes conjuntos de datos geoespaciales</p>
+              <a href="ReduccionRangoCovarianzasEspaciales-LUZ%20BELLA%20VALENZUELA%20NARVAEZ.pdf" class="btn" target="_blank">
+                📄 Ver Documento
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -430,7 +539,7 @@
               <div class="contact-text">
                 <span class="contact-label">Email</span>
                 <span class="contact-value">
-                  <a href="mailto:lvalenzuela@unsa.edu.pe">luzbellavalenzuelanarvaez@gmail.com</a>
+                  <a href="mailto:luzbellavalenzuelanarvaez@gmail.com">luzbellavalenzuelanarvaez@gmail.com</a>
                 </span>
               </div>
             </div>
@@ -456,7 +565,7 @@
               <div class="contact-text">
                 <span class="contact-label">GitHub</span>
                 <span class="contact-value">
-                  <a href="https://github.com/tu-usuario" target="_blank">github.com/Bellavalenzuela</a>
+                  <a href="https://github.com/Bellavalenzuela" target="_blank">github.com/Bellavalenzuela</a>
                 </span>
               </div>
             </div>
@@ -471,10 +580,70 @@
   </footer>
 
   <script>
-    console.log('✨ Portfolio de Estadística Espacial cargado correctamente');
-    console.log('📄 Recuerda subir el archivo PDF al mismo directorio que index.html');
-    console.log('🎨 Diseño: Negro, Morado y Celeste');
+    let contadorTrabajos = 1;
+
+    document.getElementById('btn-agregar-trabajo').addEventListener('click', function() {
+      const titulo = document.getElementById('input-titulo').value.trim();
+      const descripcion = document.getElementById('input-descripcion').value.trim();
+      const url = document.getElementById('input-url').value.trim();
+
+      if (!titulo || !descripcion || !url) {
+        alert('⚠️ Por favor completa todos los campos');
+        return;
+      }
+
+      contadorTrabajos++;
+
+      const listaTrabajos = document.getElementById('lista-trabajos');
+      
+      const nuevoTrabajo = document.createElement('div');
+      nuevoTrabajo.className = 'trabajo-card';
+      nuevoTrabajo.style.animation = 'slideIn 0.4s ease';
+      nuevoTrabajo.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+          <h3>📊 ${titulo}</h3>
+          <button class="btn-eliminar" onclick="eliminarTrabajo(this)">
+            🗑️ Eliminar
+          </button>
+        </div>
+        <p>${descripcion}</p>
+        <a href="${url}" class="btn" target="_blank">
+          📄 Ver Documento
+        </a>
+      `;
+      
+      listaTrabajos.appendChild(nuevoTrabajo);
+
+      // Limpiar campos
+      document.getElementById('input-titulo').value = '';
+      document.getElementById('input-descripcion').value = '';
+      document.getElementById('input-url').value = '';
+
+      // Feedback visual
+      const btnAgregar = document.getElementById('btn-agregar-trabajo');
+      btnAgregar.textContent = '✅ ¡Trabajo Agregado!';
+      btnAgregar.style.background = 'linear-gradient(90deg, #10b981 0%, #059669 100%)';
+      
+      setTimeout(() => {
+        btnAgregar.textContent = '➕ Agregar Trabajo';
+        btnAgregar.style.background = 'linear-gradient(90deg, var(--purple) 0%, var(--cyan) 100%)';
+      }, 2000);
+    });
+
+    function eliminarTrabajo(btn) {
+      if (confirm('¿Estás seguro de eliminar este trabajo?')) {
+        const card = btn.closest('.trabajo-card');
+        card.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+          card.remove();
+        }, 300);
+      }
+    }
+
+    console.log('✨ Portfolio de Estadística Espacial cargado');
+    console.log('🎨 Sistema de gestión de trabajos activo');
   </script>
 </body>
 </html>
+
 
