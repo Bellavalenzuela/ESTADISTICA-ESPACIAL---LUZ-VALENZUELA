@@ -611,107 +611,79 @@
   <script>
 let archivosSeleccionados = [];
 
-// --- Recuperar trabajos guardados ---
+// Recuperar trabajos guardados
 document.addEventListener("DOMContentLoaded", () => {
-    const trabajosGuardados = JSON.parse(localStorage.getItem("trabajos")) || [];
-    trabajosGuardados.forEach(trabajo =>
-        renderizarTrabajo(
-            trabajo.titulo,
-            trabajo.descripcion,
-            trabajo.enlaceArchivo,
-            trabajo.nombreArchivo,
-            false
-        )
-    );
+    const trabajos = JSON.parse(localStorage.getItem("trabajos")) || [];
+    trabajos.forEach(trabajo => {
+        crearCardZIP(trabajo.titulo, trabajo.descripcion, trabajo.zipURL, false);
+    });
 });
 
-// Manejar selección de PDF, archivos o carpetas
-document.getElementById('input-archivo').addEventListener('change', function(e) {
+// Captura archivos o carpetas
+document.getElementById('input-archivo').addEventListener('change', e => {
     archivosSeleccionados = Array.from(e.target.files);
 
-    if (archivosSeleccionados.length === 1) {
-        document.getElementById('archivo-texto').innerHTML =
-            `✅ Archivo seleccionado: <strong>${archivosSeleccionados[0].name}</strong>`;
-    } else if (archivosSeleccionados.length > 1) {
-        document.getElementById('archivo-texto').innerHTML =
-            `📂 ${archivosSeleccionados.length} archivos seleccionados`;
-    }
+    document.getElementById('archivo-texto').innerHTML =
+        archivosSeleccionados.length === 1
+        ? `✅ ${archivosSeleccionados[0].name}`
+        : `📂 ${archivosSeleccionados.length} archivos seleccionados`;
 
     document.getElementById('input-url').value = '';
 });
 
-document.getElementById('btn-agregar-trabajo').addEventListener('click', function() {
-    const tituloBase = document.getElementById('input-titulo').value.trim();
+// Botón agregar trabajo
+document.getElementById('btn-agregar-trabajo').addEventListener('click', async () => {
+    const titulo = document.getElementById('input-titulo').value.trim();
     const descripcion = document.getElementById('input-descripcion').value.trim();
-    const url = document.getElementById('input-url').value.trim();
 
-    if (!tituloBase || !descripcion) {
+    if (!titulo || !descripcion) {
         alert('⚠️ Completa el título y la descripción');
         return;
     }
 
-    if (archivosSeleccionados.length === 0 && !url) {
-        alert('⚠️ Selecciona un PDF, archivos, carpeta o ingresa una URL');
+    if (archivosSeleccionados.length === 0) {
+        alert('⚠️ Debes subir una carpeta o archivos');
         return;
     }
 
-    // Caso URL
-    if (url) {
-        renderizarTrabajo(tituloBase, descripcion, url, url, true);
-    }
+    // Crear ZIP
+    const zip = new JSZip();
 
-    // Caso PDF / archivos / carpetas
-    archivosSeleccionados.forEach((archivo) => {
-        const enlace = URL.createObjectURL(archivo);
-        const tituloFinal =
-            archivosSeleccionados.length > 1
-                ? `${tituloBase} (${archivo.name})`
-                : tituloBase;
-
-        renderizarTrabajo(
-            tituloFinal,
-            descripcion,
-            enlace,
-            archivo.name,
-            true
-        );
+    archivosSeleccionados.forEach(file => {
+        const ruta = file.webkitRelativePath || file.name;
+        zip.file(ruta, file);
     });
 
-    // Limpiar formulario
+    const blob = await zip.generateAsync({ type: "blob" });
+    const zipURL = URL.createObjectURL(blob);
+
+    crearCardZIP(titulo, descripcion, zipURL, true);
+
+    // Reset
+    archivosSeleccionados = [];
+    document.getElementById('input-archivo').value = '';
+    document.getElementById('archivo-texto').innerText = 'Subir Archivo desde tu Ordenador';
     document.getElementById('input-titulo').value = '';
     document.getElementById('input-descripcion').value = '';
-    document.getElementById('input-url').value = '';
-    document.getElementById('input-archivo').value = '';
-    document.getElementById('archivo-texto').innerHTML =
-        'Subir Archivo desde tu Ordenador';
-    archivosSeleccionados = [];
-
-    const btn = document.getElementById('btn-agregar-trabajo');
-    btn.textContent = '✅ Documentos Agregados';
-    btn.style.background = 'linear-gradient(90deg,#10b981,#059669)';
-    setTimeout(() => {
-        btn.textContent = '➕ Agregar Trabajo';
-        btn.style.background =
-            'linear-gradient(90deg, var(--purple), var(--cyan))';
-    }, 2000);
 });
 
-function renderizarTrabajo(titulo, descripcion, enlaceArchivo, nombreArchivo, guardar) {
+// Crear card del trabajo ZIP
+function crearCardZIP(titulo, descripcion, zipURL, guardar) {
     const lista = document.getElementById('lista-trabajos');
+
     const card = document.createElement('div');
     card.className = 'trabajo-card';
     card.style.animation = 'slideIn 0.4s ease';
 
     card.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
-            <h3>📄 ${titulo}</h3>
+            <h3>📦 ${titulo}</h3>
             <button class="btn-eliminar">🗑️ Eliminar</button>
         </div>
         <p>${descripcion}</p>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <a href="${enlaceArchivo}" class="btn" target="_blank">📄 Ver Documento</a>
-            <span style="font-size:12px;color:var(--text-muted)">📎 ${nombreArchivo}</span>
-        </div>
+        <a href="${zipURL}" class="btn" download="${titulo}.zip">
+            ⬇️ Descargar trabajo completo
+        </a>
     `;
 
     card.querySelector('.btn-eliminar').onclick = () => eliminarTrabajo(card, titulo);
@@ -719,13 +691,14 @@ function renderizarTrabajo(titulo, descripcion, enlaceArchivo, nombreArchivo, gu
 
     if (guardar) {
         const trabajos = JSON.parse(localStorage.getItem("trabajos")) || [];
-        trabajos.push({ titulo, descripcion, enlaceArchivo, nombreArchivo });
+        trabajos.push({ titulo, descripcion, zipURL });
         localStorage.setItem("trabajos", JSON.stringify(trabajos));
     }
 }
 
+// Eliminar
 function eliminarTrabajo(card, titulo) {
-    if (!confirm('¿Eliminar este documento?')) return;
+    if (!confirm('¿Eliminar este trabajo?')) return;
 
     card.style.animation = 'slideOut 0.3s ease';
     setTimeout(() => card.remove(), 300);
@@ -735,14 +708,14 @@ function eliminarTrabajo(card, titulo) {
     localStorage.setItem("trabajos", JSON.stringify(trabajos));
 }
 
-console.log('📄 PDF habilitado');
-console.log('📂 Subida de carpetas activa');
-console.log('🗑️ Eliminación de documentos activa');
+console.log('📦 Subida de carpetas convertidas a ZIP activa');
 </script>
+
 
 
 </body>
 </html>
+
 
 
 
