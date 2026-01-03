@@ -492,6 +492,15 @@
           
           <!-- FORMULARIO PARA AGREGAR TRABAJOS -->
           <div class="form-agregar">
+            <!-- BOTONES DE UNIDAD -->
+          <div style="display:flex;gap:14px;margin-bottom:20px">
+            <button class="btn" id="btn-unidad-1">📘 Unidad 1</button>
+            <button class="btn" id="btn-unidad-2">📗 Unidad 2</button>
+          </div>
+          
+          <div style="margin-bottom:16px;font-weight:600;color:#22d3ee" id="unidad-activa">
+            📂 Trabajando en: Unidad 1
+          </div>
             <h3>➕ Agregar Nuevo Trabajo</h3>
             
             <input 
@@ -709,12 +718,35 @@ function eliminarTrabajo(card, titulo) {
 }
 
 console.log('📦 Subida de carpetas convertidas a ZIP activa');
+
+
+    // CONTROL DE UNIDAD (solo visual)
+let unidadVisual = "Unidad 1";
+
+document.getElementById("btn-unidad-1").addEventListener("click", () => {
+    unidadVisual = "Unidad 1";
+    document.getElementById("unidad-activa").innerText =
+        "📂 Trabajando en: Unidad 1";
+});
+
+document.getElementById("btn-unidad-2").addEventListener("click", () => {
+    unidadVisual = "Unidad 2";
+    document.getElementById("unidad-activa").innerText =
+        "📂 Trabajando en: Unidad 2";
+});
+
+
+
+
+
+    
 </script>
 
 
 
 </body>
 </html>
+
 
 
 
