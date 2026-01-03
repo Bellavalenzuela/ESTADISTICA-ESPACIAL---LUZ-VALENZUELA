@@ -610,7 +610,8 @@
 
   <script>
     let contadorTrabajos = 1;
-    let archivoSeleccionado = null;
+    let archivoSeleccionado = [];
+
     
     // --- Recuperar trabajos guardados al cargar ---
     document.addEventListener("DOMContentLoaded", () => {
@@ -661,7 +662,7 @@
         document.getElementById('input-url').value = '';
         document.getElementById('input-archivo').value = '';
         document.getElementById('archivo-texto').innerHTML = 'Subir Archivo desde tu Ordenador';
-        archivoSeleccionado = null;
+        archivoSeleccionado = [];
     
         // Feedback visual
         const btnAgregar = document.getElementById('btn-agregar-trabajo');
@@ -715,11 +716,12 @@
     }
     
     console.log('✨ Portfolio de Estadística Espacial cargado');
-    console.log('🎨 Sistema de gestión de trabajos activo');
-    console.log('📎 Función de subida de archivos habilitada');
+    console.log('Sistema de gestión de trabajos activo');
+    console.log('Función de subida de archivos habilitada');
   </script>
 
 </body>
 </html>
+
 
 
