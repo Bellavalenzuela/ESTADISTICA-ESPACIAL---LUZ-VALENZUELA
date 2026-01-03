@@ -609,119 +609,141 @@
   </footer>
 
   <script>
-    let contadorTrabajos = 1;
-    let archivoSeleccionado = [];
+let archivosSeleccionados = [];
 
-    
-    // --- Recuperar trabajos guardados al cargar ---
-    document.addEventListener("DOMContentLoaded", () => {
-        const trabajosGuardados = JSON.parse(localStorage.getItem("trabajos")) || [];
-        trabajosGuardados.forEach(trabajo => renderizarTrabajo(trabajo.titulo, trabajo.descripcion, trabajo.enlaceArchivo, trabajo.nombreArchivo, false));
-    });
-    
-    // Manejar selección de archivo
-    document.getElementById('input-archivo').addEventListener('change', function(e) {
-        const archivo = e.target.files[0];
-        if (archivo) {
-            archivoSeleccionado = archivo;
-            const botonTexto = document.getElementById('archivo-texto');
-            botonTexto.innerHTML = `✅ Archivo seleccionado: <strong>${archivo.name}</strong>`;
-            document.getElementById('input-url').value = '';
-        }
-    });
-    
-    document.getElementById('btn-agregar-trabajo').addEventListener('click', function() {
-        const titulo = document.getElementById('input-titulo').value.trim();
-        const descripcion = document.getElementById('input-descripcion').value.trim();
-        const url = document.getElementById('input-url').value.trim();
-    
-        if (!titulo || !descripcion) {
-            alert('⚠️ Por favor completa el título y la descripción');
-            return;
-        }
-        if (!archivoSeleccionado && !url) {
-            alert('⚠️ Por favor selecciona un archivo o ingresa una URL');
-            return;
-        }
-    
-        contadorTrabajos++;
-        let enlaceArchivo = url;
-        let nombreArchivo = url;
-    
-        if (archivoSeleccionado) {
-            enlaceArchivo = URL.createObjectURL(archivoSeleccionado);
-            nombreArchivo = archivoSeleccionado.name;
-        }
-    
-        // Renderizar en la lista
-        renderizarTrabajo(titulo, descripcion, enlaceArchivo, nombreArchivo, true);
-    
-        // Limpiar campos
-        document.getElementById('input-titulo').value = '';
-        document.getElementById('input-descripcion').value = '';
-        document.getElementById('input-url').value = '';
-        document.getElementById('input-archivo').value = '';
-        document.getElementById('archivo-texto').innerHTML = 'Subir Archivo desde tu Ordenador';
-        archivoSeleccionado = [];
-    
-        // Feedback visual
-        const btnAgregar = document.getElementById('btn-agregar-trabajo');
-        btnAgregar.textContent = '✅ ¡Trabajo Agregado!';
-        btnAgregar.style.background = 'linear-gradient(90deg, #10b981 0%, #059669 100%)';
-        setTimeout(() => {
-            btnAgregar.textContent = '➕ Agregar Trabajo';
-            btnAgregar.style.background = 'linear-gradient(90deg, var(--purple) 0%, var(--cyan) 100%)';
-        }, 2000);
-    });
-    
-    function renderizarTrabajo(titulo, descripcion, enlaceArchivo, nombreArchivo, guardar) {
-        const listaTrabajos = document.getElementById('lista-trabajos');
-        const nuevoTrabajo = document.createElement('div');
-        nuevoTrabajo.className = 'trabajo-card';
-        nuevoTrabajo.style.animation = 'slideIn 0.4s ease';
-        nuevoTrabajo.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
-                <h3>📊 ${titulo}</h3>
-                <button class="btn-eliminar" onclick="eliminarTrabajo(this, '${titulo}')"> 🗑️ Eliminar </button>
-            </div>
-            <p>${descripcion}</p>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-                <a href="${enlaceArchivo}" class="btn" target="_blank"> 📄 Ver Documento </a>
-                ${nombreArchivo ? `<span style="color:var(--text-muted);font-size:12px;align-self:center">📎 ${nombreArchivo}</span>` : ''}
-            </div>
-        `;
-        listaTrabajos.appendChild(nuevoTrabajo);
-    
-        // Guardar en LocalStorage
-        if (guardar) {
-            const trabajosGuardados = JSON.parse(localStorage.getItem("trabajos")) || [];
-            trabajosGuardados.push({ titulo, descripcion, enlaceArchivo, nombreArchivo });
-            localStorage.setItem("trabajos", JSON.stringify(trabajosGuardados));
-        }
+// --- Recuperar trabajos guardados ---
+document.addEventListener("DOMContentLoaded", () => {
+    const trabajosGuardados = JSON.parse(localStorage.getItem("trabajos")) || [];
+    trabajosGuardados.forEach(trabajo =>
+        renderizarTrabajo(
+            trabajo.titulo,
+            trabajo.descripcion,
+            trabajo.enlaceArchivo,
+            trabajo.nombreArchivo,
+            false
+        )
+    );
+});
+
+// Manejar selección de PDF, archivos o carpetas
+document.getElementById('input-archivo').addEventListener('change', function(e) {
+    archivosSeleccionados = Array.from(e.target.files);
+
+    if (archivosSeleccionados.length === 1) {
+        document.getElementById('archivo-texto').innerHTML =
+            `✅ Archivo seleccionado: <strong>${archivosSeleccionados[0].name}</strong>`;
+    } else if (archivosSeleccionados.length > 1) {
+        document.getElementById('archivo-texto').innerHTML =
+            `📂 ${archivosSeleccionados.length} archivos seleccionados`;
     }
-    
-    function eliminarTrabajo(btn, titulo) {
-        if (confirm('¿Estás seguro de eliminar este trabajo?')) {
-            const card = btn.closest('.trabajo-card');
-            card.style.animation = 'slideOut 0.3s ease';
-            setTimeout(() => {
-                card.remove();
-            }, 300);
-    
-            // Eliminar de LocalStorage
-            let trabajosGuardados = JSON.parse(localStorage.getItem("trabajos")) || [];
-            trabajosGuardados = trabajosGuardados.filter(t => t.titulo !== titulo);
-            localStorage.setItem("trabajos", JSON.stringify(trabajosGuardados));
-        }
+
+    document.getElementById('input-url').value = '';
+});
+
+document.getElementById('btn-agregar-trabajo').addEventListener('click', function() {
+    const tituloBase = document.getElementById('input-titulo').value.trim();
+    const descripcion = document.getElementById('input-descripcion').value.trim();
+    const url = document.getElementById('input-url').value.trim();
+
+    if (!tituloBase || !descripcion) {
+        alert('⚠️ Completa el título y la descripción');
+        return;
     }
-    
-    console.log('✨ Portfolio de Estadística Espacial cargado');
-    console.log('Sistema de gestión de trabajos activo');
-    console.log('Función de subida de archivos habilitada');
-  </script>
+
+    if (archivosSeleccionados.length === 0 && !url) {
+        alert('⚠️ Selecciona un PDF, archivos, carpeta o ingresa una URL');
+        return;
+    }
+
+    // Caso URL
+    if (url) {
+        renderizarTrabajo(tituloBase, descripcion, url, url, true);
+    }
+
+    // Caso PDF / archivos / carpetas
+    archivosSeleccionados.forEach((archivo) => {
+        const enlace = URL.createObjectURL(archivo);
+        const tituloFinal =
+            archivosSeleccionados.length > 1
+                ? `${tituloBase} (${archivo.name})`
+                : tituloBase;
+
+        renderizarTrabajo(
+            tituloFinal,
+            descripcion,
+            enlace,
+            archivo.name,
+            true
+        );
+    });
+
+    // Limpiar formulario
+    document.getElementById('input-titulo').value = '';
+    document.getElementById('input-descripcion').value = '';
+    document.getElementById('input-url').value = '';
+    document.getElementById('input-archivo').value = '';
+    document.getElementById('archivo-texto').innerHTML =
+        'Subir Archivo desde tu Ordenador';
+    archivosSeleccionados = [];
+
+    const btn = document.getElementById('btn-agregar-trabajo');
+    btn.textContent = '✅ Documentos Agregados';
+    btn.style.background = 'linear-gradient(90deg,#10b981,#059669)';
+    setTimeout(() => {
+        btn.textContent = '➕ Agregar Trabajo';
+        btn.style.background =
+            'linear-gradient(90deg, var(--purple), var(--cyan))';
+    }, 2000);
+});
+
+function renderizarTrabajo(titulo, descripcion, enlaceArchivo, nombreArchivo, guardar) {
+    const lista = document.getElementById('lista-trabajos');
+    const card = document.createElement('div');
+    card.className = 'trabajo-card';
+    card.style.animation = 'slideIn 0.4s ease';
+
+    card.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+            <h3>📄 ${titulo}</h3>
+            <button class="btn-eliminar">🗑️ Eliminar</button>
+        </div>
+        <p>${descripcion}</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a href="${enlaceArchivo}" class="btn" target="_blank">📄 Ver Documento</a>
+            <span style="font-size:12px;color:var(--text-muted)">📎 ${nombreArchivo}</span>
+        </div>
+    `;
+
+    card.querySelector('.btn-eliminar').onclick = () => eliminarTrabajo(card, titulo);
+    lista.appendChild(card);
+
+    if (guardar) {
+        const trabajos = JSON.parse(localStorage.getItem("trabajos")) || [];
+        trabajos.push({ titulo, descripcion, enlaceArchivo, nombreArchivo });
+        localStorage.setItem("trabajos", JSON.stringify(trabajos));
+    }
+}
+
+function eliminarTrabajo(card, titulo) {
+    if (!confirm('¿Eliminar este documento?')) return;
+
+    card.style.animation = 'slideOut 0.3s ease';
+    setTimeout(() => card.remove(), 300);
+
+    let trabajos = JSON.parse(localStorage.getItem("trabajos")) || [];
+    trabajos = trabajos.filter(t => t.titulo !== titulo);
+    localStorage.setItem("trabajos", JSON.stringify(trabajos));
+}
+
+console.log('📄 PDF habilitado');
+console.log('📂 Subida de carpetas activa');
+console.log('🗑️ Eliminación de documentos activa');
+</script>
+
 
 </body>
 </html>
+
 
 
 
